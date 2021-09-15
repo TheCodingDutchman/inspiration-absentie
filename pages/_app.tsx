@@ -11,10 +11,10 @@ function App({ Component, pageProps }: AppProps) {
 	// TODO: Return login page when not signed in instead of requested component
 
 	return (
-		<ThemeProvider>
+		<div className="background-white text-black p-4">
 			{/* eslint-disable-next-line react/jsx-props-no-spreading */}
 			<Component {...pageProps} />
-		</ThemeProvider>
+		</div>
 	);
 }
 
