@@ -1,84 +1,90 @@
 import { useEffect, useState } from 'react';
+import useSWR from 'swr';
+import axios from 'axios';
+import { Class, ClassesApiResponse } from '../types/Magister';
 
-export default function Calendar({ }) {
+const fetcher = (url: string) => axios.get(url).then((res) => res.data);
+
+export default function Calendar() {
 	const [selectedHours, setSelectedHours] = useState<number[]>([]);
 
-	const [classes, setClasses] = useState([]);
+	const [classes, setClasses] = useState<JSX.Element[] | null>(null);
+	const { data: apiResponse } = useSWR<ClassesApiResponse>('/api/classes', fetcher);
 
 	useEffect(() => {
-		console.log(selectedHours);
-	}, [selectedHours]);
-
-	useEffect(() => {
-		const apiResponse = [
-			{
-				period: 1, id: 1, starttime: '8:25', endtime: '9:15', subject: 'sk',
-			},
-			{},
-			{},
-			{},
-			{},
-			{},
-			{},
-			{},
-			{
-				period: 9, id: 9, starttime: '16:00', endtime: '16:50', subject: 'na',
-			},
+		const daysData: Array<Class[]> = [
+			[],
+			[],
+			[],
+			[],
+			[],
 		];
-		const html = apiResponse.map((item) => {
-			const row = [];
 
-			if (!item.id) {
-				for (let x = 0; x < 5; x++) {
-					row.push(
-						<td className="w-36 h-16" />,
-					);
-				}
-			} else {
-				for (let x = 0; x < 5; x++) {
-					row.push(
-						// eslint-disable-next-line max-len
-						// eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-noninteractive-element-interactions
+		apiResponse?.Items?.forEach((item) => {
+			daysData[new Date(item.Start).getDay() - 1].push(item);
+		});
+
+		const html: JSX.Element[] = [];
+
+		for (let i = 1; i <= 9; i++) {
+			const row: JSX.Element[] = [];
+			daysData?.forEach((day) => {
+				const td = day.find((el) => el.LesuurVan === i);
+				if (td) {
+					row.push((
 						<td
-							key={item.id}
-							id={item.id}
-							onClick={() => {
-								if (selectedHours.includes(item.id)) {
-									const index = selectedHours.findIndex((el) => el === item.id);
-									const copy = [...selectedHours].splice(index, 1);
-									setSelectedHours(copy);
-								} else setSelectedHours([...selectedHours, item.id]);
-							}}
+							key={td.Id.toString()}
+							id={td.Id.toString()}
 						>
-							<div className={[`w-36 h-16 border border-gray-400 p-2 rounded-sm${selectedHours?.includes(item.id) ? ' bg-gray-200' : ''}`]}>
+							{/* eslint-disable-next-line max-len */}
+							{/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions, jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
+							<div
+								className={`w-36 h-16 border border-gray-400 p-2 my-2 rounded-sm${selectedHours?.includes(td.Id) ? ' bg-gray-200' : ''}`}
+								onClick={() => {
+									if (selectedHours.includes(td.Id)) {
+										const isselected = (el: number) => el === td.Id;
+										const index = selectedHours.findIndex(isselected);
+										const copy = [...selectedHours];
+										copy.splice(index, 1);
+										setSelectedHours(copy);
+									} else setSelectedHours([...selectedHours, td.Id]);
+								}}
+							>
 								<span className="flex">
 									<div className="bg-black text-white w-5 h-5 flex justify-center items-center rounded-md mr-1">
-										{item.period}
+										{td.LesuurVan}
 									</div>
-									{item.subject}
+									{td.Omschrijving.split('-').splice(0, 2).join(' - ').trim()}
 								</span>
-								{item.starttime}
+								{/* eslint-disable react/jsx-one-expression-per-line */}
+								{new Date(td.Start).getHours()}:{new Date(td.Start).getMinutes() < 10 ? `0${new Date(td.Start).getMinutes()}` : new Date(td.Start).getMinutes()}
 								-
-								{item.endtime}
+								{new Date(td.Einde).getHours()}:{new Date(td.Einde).getMinutes() < 10 ? `0${new Date(td.Einde).getMinutes()}` : new Date(td.Einde).getMinutes()}
+								{/* eslint-enable */}
 							</div>
-						</td>,
-					);
+						</td>
+					));
+				} else {
+					row.push((
+						<td>
+							<div className="w-36 h-16" />
+						</td>
+					));
 				}
-			}
+			});
 
-			return (
+			html.push((
 				<tr>
 					{row}
 				</tr>
-			);
-		});
+			));
+		}
 
 		setClasses(html);
-		console.log(classes);
-	}, [selectedHours]);
+	}, [selectedHours, apiResponse]);
 
 	return (
-		<div>
+		<div className="max-w-max p-2">
 			<table id="rostertable">
 				<tr>
 					<th><div className="w-40">Maandag</div></th>

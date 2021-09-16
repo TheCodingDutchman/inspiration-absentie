@@ -12,5 +12,6 @@ module.exports = {
 		'@typescript-eslint/indent': ['error', 'tab'],
 		'react/jsx-indent': ['error', 'tab'],
 		'react/jsx-indent-props': ['error', 'tab'],
+		'no-plusplus': ['error', { allowForLoopAfterthoughts: true }],
 	},
 };
