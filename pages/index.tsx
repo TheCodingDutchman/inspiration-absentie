@@ -4,15 +4,14 @@ import { FormEvent, useState } from 'react';
 import Calendar from '../components/calendar';
 
 const Home: NextPage = () => {
-	const [user, setUser] = useState<object>({
+	type User = {
+		role: 'werkgroepvoorzitter' | 'verzuimcoordinator' | 'werkgroeplid';
+		admin?: boolean;
+	};
+
+	const [user, setUser] = useState<User>({
 		role: 'werkgroepvoorzitter',
 	});
-	const [time, setTime] = useState<string>('');
-
-	function handleSubmit(event: FormEvent) {
-		event.preventDefault();
-		alert(time);
-	}
 
 	return (
 		<div>
@@ -24,7 +23,8 @@ const Home: NextPage = () => {
 				{' '}
 				{user.role}
 			</h1>
-			<Calendar />
+			{/* TODO: Render dashboard componont based on role */}
+			<Calendar updateSelectedHours={() => {}} />
 		</div>
 	);
 };

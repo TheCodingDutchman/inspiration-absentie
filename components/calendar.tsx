@@ -5,11 +5,20 @@ import { Class, ClassesApiResponse } from '../types/Magister';
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
-export default function Calendar() {
+type Props = {
+	updateSelectedHours: (selection: number[]) => void;
+};
+
+export default function Calendar({ updateSelectedHours }: Props) {
 	const [selectedHours, setSelectedHours] = useState<number[]>([]);
 
 	const [classes, setClasses] = useState<JSX.Element[] | null>(null);
 	const { data: apiResponse } = useSWR<ClassesApiResponse>('/api/classes', fetcher);
+
+	useEffect(() => {
+		updateSelectedHours(selectedHours);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [selectedHours]);
 
 	useEffect(() => {
 		const daysData: Array<Class[]> = [
