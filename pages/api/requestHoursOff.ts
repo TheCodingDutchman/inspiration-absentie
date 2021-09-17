@@ -20,7 +20,9 @@ export default function handler(
 	body.hours.forEach((hour) => {
 		const item = apiData.Items.find((el) => el.Id === hour);
 		const teacher = item?.Docenten[0];
-		// TODO: Get teacher(Magister), send notification(pusher) and email(nodemailer)
+		console.log(teacher?.Docentcode);
+		// TODO: Get teacher(Magister+LDAP), send notification(pusher) and email(nodemailer)
+		// TODO: link teacher code to beam subscriber to send push notifications
 	});
 
 	res.status(201).end();
