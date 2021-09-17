@@ -1,7 +1,6 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useState } from 'react';
-import Calendar from '../components/calendar';
 import WerkgroepvoorzitterDashboard from '../components/dashboards/werkgroepvoorzitter';
 
 const Home: NextPage = () => {
@@ -26,6 +25,7 @@ const Home: NextPage = () => {
 			</h1>
 			{/* TODO: Render dashboard componont based on role */}
 			<WerkgroepvoorzitterDashboard />
+
 		</div>
 	);
 };
