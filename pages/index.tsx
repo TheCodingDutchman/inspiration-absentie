@@ -2,6 +2,7 @@ import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useState } from 'react';
 import Calendar from '../components/calendar';
+import WerkgroepvoorzitterDashboard from '../components/dashboards/werkgroepvoorzitter';
 
 const Home: NextPage = () => {
 	type User = {
@@ -24,7 +25,7 @@ const Home: NextPage = () => {
 				{user.role}
 			</h1>
 			{/* TODO: Render dashboard componont based on role */}
-			<Calendar updateSelectedHours={() => {}} />
+			<WerkgroepvoorzitterDashboard />
 		</div>
 	);
 };
