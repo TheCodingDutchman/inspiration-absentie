@@ -1,6 +1,6 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
-import { FormEvent, useState } from 'react';
+import { useState } from 'react';
 import Calendar from '../components/calendar';
 
 const Home: NextPage = () => {
