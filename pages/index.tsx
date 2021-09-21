@@ -25,7 +25,6 @@ const Home: NextPage = () => {
 			</h1>
 			{/* TODO: Render dashboard componont based on role */}
 			<WerkgroepvoorzitterDashboard />
-
 		</div>
 	);
 };
