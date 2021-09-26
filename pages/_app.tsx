@@ -5,12 +5,13 @@ import { ThemeProvider } from 'next-themes';
 import * as PusherPushNotifications from '@pusher/push-notifications-web';
 import Pusher from 'pusher-js';
 import { useEffect } from 'react';
+import { SessionProvider } from 'next-auth/react';
 
 // eslint-disable-next-line max-len
 // TODO: Auth checking (next-auth.js.org (ADFS + Osso(ossoapp.com), see docs)) and theme switching (next-themes)
 //* Styling is done using tailwindcss.com
 
-function App({ Component, pageProps }: AppProps) {
+function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
 	// TODO: Return login page when not signed in instead of requested component
 
 	useEffect(() => {
@@ -36,10 +37,12 @@ function App({ Component, pageProps }: AppProps) {
 	});
 
 	return (
-		<div className="background-white text-black p-4">
-			{/* eslint-disable-next-line react/jsx-props-no-spreading */}
-			<Component {...pageProps} />
-		</div>
+		<SessionProvider session={session}>
+			<div className="background-white text-black p-4">
+				{/* eslint-disable-next-line react/jsx-props-no-spreading */}
+				<Component {...pageProps} />
+			</div>
+		</SessionProvider>
 	);
 }
 
